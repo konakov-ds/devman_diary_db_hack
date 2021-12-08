@@ -1,28 +1,28 @@
 import random
 from datacenter.models import Schoolkid, Chastisement,\
     Mark, Lesson, Subject, Commendation
-from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 
 
 def remove_chastisements(student_name):
-    try:
-        schoolkid = Schoolkid.objects.get(
-            full_name__contains=student_name
-        )
-    except ObjectDoesNotExist:
-        print('Student does not exist!')
-    else:
+    schoolkid = get_object_or_404(
+        Schoolkid,
+        full_name__contains=student_name
+    )
+    if schoolkid:
         chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
         chastisements.delete()
         print(f'{student_name} chastisements successfully deleted!')
+    else:
+        print('Student does not exist!')
 
 
 def fix_marks(student_name):
-    try:
-        schoolkid = Schoolkid.objects.get(
-            full_name__contains=student_name
-        )
-    except ObjectDoesNotExist:
+    schoolkid = get_object_or_404(
+        Schoolkid,
+        full_name__contains=student_name
+    )
+    if not schoolkid:
         print('Student does not exist!')
     else:
         schoolkid_bad_marks = Mark.objects.filter(schoolkid=schoolkid, points__lt=4)
@@ -37,19 +37,19 @@ def fix_marks(student_name):
 
 def create_commendation(student_name, subject_title):
     commendation_text = 'Хвалю!'
-    try:
-        schoolkid = Schoolkid.objects.get(
-            full_name__contains=student_name
-        )
-    except ObjectDoesNotExist:
-        print('Student does not exist')
+    schoolkid = get_object_or_404(
+        Schoolkid,
+        full_name__contains=student_name
+    )
+    if not schoolkid:
+        print('Student does not exist!')
     else:
-        try:
-            subject = Subject.objects.get(
-                title=subject_title,
-                year_of_study=schoolkid.year_of_study
-            )
-        except ObjectDoesNotExist:
+        subject = get_object_or_404(
+            Subject,
+            title=subject_title,
+            year_of_study=schoolkid.year_of_study
+        )
+        if not subject:
             print('Subject does not exist')
         else:
             lessons = Lesson.objects.filter(subject=subject)
@@ -64,4 +64,4 @@ def create_commendation(student_name, subject_title):
                 subject=subject,
                 teacher=teacher
             )
-            print(f'{student_name} commendations successfully added!')
+            print(f'{student_name} commendation successfully added!')
