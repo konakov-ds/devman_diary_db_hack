@@ -1,0 +1,1 @@
+# devman_diary_db_hack
