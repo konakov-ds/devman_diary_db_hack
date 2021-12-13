@@ -13,17 +13,16 @@
 Функция позволяет удалить все замечания учителя для данного ученика.
 
 Для использования имортируйте функцию:
- ```
-  from scripts import remove_chastisements
-
-  ```
+```python
+    from scripts import remove_chastisements
+```
   
 - **fix_marks(student_name)**
 
  Функция заменяет плохие(ниже 4) оценки ученика на 4 или 5.
 
 Для использования имортируйте функцию:
- ```
+ ```python
   from scripts import fix_marks
 
   ```
@@ -32,13 +31,13 @@
 
  Функция заносит в дневник похвалу от учителя. Вам нужно передать в качестве аргументов
 ФИО ученика и название предмета, например:
-```
+```python
   create_commendation('Фролов Иван', 'Музыка')
 
   ```
 
 Для использования имортируйте функцию:
- ```
+ ```python
   from scripts import create_commendation
 
   ```
