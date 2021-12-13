@@ -9,9 +9,9 @@ def get_schoolkid(student_name):
             full_name__contains=student_name
         )
         if not schoolkid:
-            print('Student does not exist!')
+            raise ValueError(f'Student {student_name} does not exist!')
         elif len(schoolkid) > 1:
-            print(f'There are more than one student with name {student_name}')
+            raise ValueError(f'There are more than one student with name {student_name}')
         else:
             return schoolkid[0]
 
@@ -47,20 +47,18 @@ def create_commendation(student_name, subject_title):
         title=subject_title,
         year_of_study=schoolkid.year_of_study
     )
-    if not subject:
-        print('Subject does not exist')
-    else:
-        lessons = Lesson.objects.filter(subject=subject)
-        lesson = random.choice(lessons)
-        teacher = lesson.teacher
-        lesson_date = lesson.date
-        commendation_text = random.choice(commendation_texts)
 
-        Commendation.objects.create(
-            text=commendation_text,
-            created=lesson_date,
-            schoolkid=schoolkid,
-            subject=subject,
-            teacher=teacher
-        )
-        print(f'{student_name} commendation successfully added!')
+    lessons = Lesson.objects.filter(subject=subject)
+    lesson = random.choice(lessons)
+    teacher = lesson.teacher
+    lesson_date = lesson.date
+    commendation_text = random.choice(commendation_texts)
+
+    Commendation.objects.create(
+        text=commendation_text,
+        created=lesson_date,
+        schoolkid=schoolkid,
+        subject=subject,
+        teacher=teacher
+    )
+    print(f'{student_name} commendation successfully added!')
