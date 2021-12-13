@@ -39,7 +39,7 @@ def create_commendation(student_name, subject_title):
     commendation_texts = ['Хвалю!', 'Отличная работа!',
                           'Предложил оригинальное решение!',
                           'Инициативный и ответственный!',
-                          'Подготовка на вышем уровне!']
+                          'Подготовка на выcшем уровне!']
     schoolkid = get_schoolkid(student_name)
 
     subject = get_object_or_404(
