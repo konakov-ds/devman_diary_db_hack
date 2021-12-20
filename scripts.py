@@ -5,44 +5,44 @@ from datacenter.models import Schoolkid, Chastisement, \
 from django.shortcuts import get_object_or_404
 
 
-def get_schoolkid(student_name):
+def get_schoolkid(schoolkid_name):
     try:
         schoolkid = Schoolkid.objects.get(
-            full_name__contains=student_name
+            full_name__contains=schoolkid_name
         )
         return schoolkid
     except MultipleObjectsReturned:
-        print(f'There are more than one student with name {student_name}')
+        print(f'There are more than one student with name {schoolkid_name}')
 
     except ObjectDoesNotExist:
-        print(f'Student {student_name} does not exist!')
+        print(f'Student {schoolkid_name} does not exist!')
 
 
-def remove_chastisements(student_name):
-    schoolkid = get_schoolkid(student_name)
+def remove_chastisements(schoolkid_name):
+    schoolkid = get_schoolkid(schoolkid_name)
     chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
     chastisements.delete()
-    print(f'{student_name} chastisements successfully deleted!')
+    print(f'{schoolkid_name} chastisements successfully deleted!')
 
 
-def fix_marks(student_name):
-    schoolkid = get_schoolkid(student_name)
+def fix_marks(schoolkid_name):
+    schoolkid = get_schoolkid(schoolkid_name)
     schoolkid_bad_marks = Mark.objects.filter(schoolkid=schoolkid, points__lt=4)
     if schoolkid_bad_marks:
         for mark in schoolkid_bad_marks:
             mark.points = random.randint(4, 5)
             mark.save()
-        print(f'{student_name} marks successfully changed!')
+        print(f'{schoolkid_name} marks successfully changed!')
     else:
         print(f'Bad marks do not find!')
 
 
-def create_commendation(student_name, subject_title):
+def create_commendation(schoolkid_name, subject_title):
     commendation_texts = ['Хвалю!', 'Отличная работа!',
                           'Предложил оригинальное решение!',
                           'Инициативный и ответственный!',
                           'Подготовка на выcшем уровне!']
-    schoolkid = get_schoolkid(student_name)
+    schoolkid = get_schoolkid(schoolkid_name)
 
     subject = get_object_or_404(
         Subject,
@@ -62,4 +62,4 @@ def create_commendation(student_name, subject_title):
         subject=subject,
         teacher=teacher
     )
-    print(f'{student_name} commendation successfully added!')
+    print(f'{schoolkid_name} commendation successfully added!')
