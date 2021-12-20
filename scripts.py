@@ -2,7 +2,6 @@ import random
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from datacenter.models import Schoolkid, Chastisement, \
     Mark, Lesson, Subject, Commendation
-from django.shortcuts import get_object_or_404
 
 
 def get_schoolkid(schoolkid_name):
@@ -43,23 +42,25 @@ def create_commendation(schoolkid_name, subject_title):
                           'Инициативный и ответственный!',
                           'Подготовка на выcшем уровне!']
     schoolkid = get_schoolkid(schoolkid_name)
+    if schoolkid:
+        try:
+            subject = Subject.objects.get(
+                title=subject_title,
+                year_of_study=schoolkid.year_of_study
+            )
+            lesson = Lesson.objects.filter(subject=subject).order_by('-date')[0]
+            teacher = lesson.teacher
+            lesson_date = lesson.date
+            commendation_text = random.choice(commendation_texts)
 
-    subject = get_object_or_404(
-        Subject,
-        title=subject_title,
-        year_of_study=schoolkid.year_of_study
-    )
+            Commendation.objects.create(
+                text=commendation_text,
+                created=lesson_date,
+                schoolkid=schoolkid,
+                subject=subject,
+                teacher=teacher
+            )
+            print(f'{schoolkid_name} commendation successfully added!')
 
-    lesson = Lesson.objects.filter(subject=subject).order_by('-date')[0]
-    teacher = lesson.teacher
-    lesson_date = lesson.date
-    commendation_text = random.choice(commendation_texts)
-
-    Commendation.objects.create(
-        text=commendation_text,
-        created=lesson_date,
-        schoolkid=schoolkid,
-        subject=subject,
-        teacher=teacher
-    )
-    print(f'{schoolkid_name} commendation successfully added!')
+        except ObjectDoesNotExist:
+            print(f'Subject {subject_title} does not exist!')
