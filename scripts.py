@@ -48,8 +48,7 @@ def create_commendation(student_name, subject_title):
         year_of_study=schoolkid.year_of_study
     )
 
-    lessons = Lesson.objects.filter(subject=subject)
-    lesson = random.choice(lessons)
+    lesson = Lesson.objects.filter(subject=subject).order_by('-date')[-1]
     teacher = lesson.teacher
     lesson_date = lesson.date
     commendation_text = random.choice(commendation_texts)
