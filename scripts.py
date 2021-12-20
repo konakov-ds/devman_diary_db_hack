@@ -1,19 +1,21 @@
 import random
-from datacenter.models import Schoolkid, Chastisement,\
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from datacenter.models import Schoolkid, Chastisement, \
     Mark, Lesson, Subject, Commendation
 from django.shortcuts import get_object_or_404
 
 
 def get_schoolkid(student_name):
-        schoolkid = Schoolkid.objects.filter(
+    try:
+        schoolkid = Schoolkid.objects.get(
             full_name__contains=student_name
         )
-        if not schoolkid:
-            raise ValueError(f'Student {student_name} does not exist!')
-        elif len(schoolkid) > 1:
-            raise ValueError(f'There are more than one student with name {student_name}')
-        else:
-            return schoolkid[0]
+        return schoolkid
+    except MultipleObjectsReturned:
+        print(f'There are more than one student with name {student_name}')
+
+    except ObjectDoesNotExist:
+        print(f'Student {student_name} does not exist!')
 
 
 def remove_chastisements(student_name):
@@ -48,7 +50,7 @@ def create_commendation(student_name, subject_title):
         year_of_study=schoolkid.year_of_study
     )
 
-    lesson = Lesson.objects.filter(subject=subject).order_by('-date')[-1]
+    lesson = Lesson.objects.filter(subject=subject).order_by('-date')[0]
     teacher = lesson.teacher
     lesson_date = lesson.date
     commendation_text = random.choice(commendation_texts)
