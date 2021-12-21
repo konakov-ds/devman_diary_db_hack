@@ -1,5 +1,4 @@
 import random
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from datacenter.models import Schoolkid, Chastisement, \
     Mark, Lesson, Subject, Commendation
 
@@ -10,10 +9,10 @@ def get_schoolkid(schoolkid_name):
             full_name__contains=schoolkid_name
         )
         return schoolkid
-    except MultipleObjectsReturned:
+    except Schoolkid.MultipleObjectsReturned:
         print(f'There are more than one student with name {schoolkid_name}')
 
-    except ObjectDoesNotExist:
+    except Schoolkid.DoesNotExist:
         print(f'Student {schoolkid_name} does not exist!')
 
 
@@ -62,5 +61,5 @@ def create_commendation(schoolkid_name, subject_title):
             )
             print(f'{schoolkid_name} commendation successfully added!')
 
-        except ObjectDoesNotExist:
+        except Subject.DoesNotExist:
             print(f'Subject {subject_title} does not exist!')
